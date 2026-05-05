@@ -1,6 +1,6 @@
 """Bluetooth clock support for devices implementing the Current Time Service.
 
-This includes the PineTime with InfiniTime firmware.
+This includes the PineTime with InfiniTime firmware and Beuer BM59.
 """
 from __future__ import annotations
 
@@ -157,6 +157,38 @@ class InfiniTime(CurrentTimeService):
 
         Returns:
             bool: ``True`` if the device is recognized as a PineTime with InfiniTime
+            firmware, ``False`` otherwise.
+        """
+        return cls.recognize_from_local_name(advertisement_data.local_name)
+
+
+class BM59(CurrentTimeService):
+    """Bluetooth clock support for the Beuer BM59 blood pressure monitor."""
+
+    DEVICE_TYPE = "Beuer BM59"
+    LOCAL_NAME = "BM59"
+    """The local name used to recognize this type of device."""
+
+    LOCAL_NAME_STARTS_WITH = False
+    """The local name should exactly match `LOCAL_NAME`."""
+
+    @classmethod
+    def recognize(
+        cls,
+        device: BLEDevice,
+        advertisement_data: AdvertisementData,
+    ) -> bool:
+        """Recognize the Beuer BM59 blood pressure monitor from advertisement data.
+
+        This checks whether the advertisement data has a local name that is equal
+        to or starts with `LOCAL_NAME`.
+
+        Args:
+            device (~bleak.backends.device.BLEDevice): The Bluetooth device.
+            advertisement_data (AdvertisementData): The advertisement data.
+
+        Returns:
+            bool: ``True`` if the device is recognized as a Beuer BM59 blood pressure monitor
             firmware, ``False`` otherwise.
         """
         return cls.recognize_from_local_name(advertisement_data.local_name)
